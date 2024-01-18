@@ -1,0 +1,9 @@
+@testHackRank_HostAddress = http://localhost:5184
+
+GET {{testHackRank_HostAddress}}/weatherforecast/
+Accept: application/json
+
+
+GET {{testHackRank_HostAddress}}/primeirotestehack/
+Accept: application/json
+###
