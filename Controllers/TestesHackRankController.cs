@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Linq.Expressions;
+using testHackRank.Classes;
 
 namespace testHackRank.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class TestesHackRankController : ControllerBase  
+    public class TestesHackRankController : ControllerBase
     {
 
         private readonly ILogger<TestesHackRankController> _logger;
@@ -25,7 +26,7 @@ namespace testHackRank.Controllers
         }
 
         [HttpGet("SimpleArraySum")]
-        public string ListaSimplesSoma(int tamanhoLista, string numeros)
+        public IActionResult ListaSimplesSoma(int tamanhoLista, string numeros)
         {
             try
             {
@@ -43,38 +44,56 @@ namespace testHackRank.Controllers
 
                     int[] numerosInt = Array.ConvertAll(numerosArray, int.Parse);
 
-                    
+                    if (numerosInt.Count() != lista.Capacity)
+                    {
+                        return BadRequest("Os itens da lista nao equivalem a capacidade da lista");
+                    }
+
                     foreach (var num in numerosInt)
                     {
                         lista.Add(num);
-                        somaFinal = lista.Sum();
+                        //somaFinal = lista.Sum(); aqui se fosse somar ja com os valores do array
                     }
 
-                    return $"  Capacidade da Lista: {tamanhoLista}. {Environment.NewLine} E os numeros que compoem ela são: {numeros}. {Environment.NewLine} A soma deles da um total de {somaFinal}. ";
-                   
+
+                    //Decidi colocar uma verificação de se os itens do array são menores que 1000
+                    if (CheckValueMenorQueMil(lista))
+                    {
+                        somaFinal = lista.Sum();
+
+                        return new OkObjectResult(new { Mensagem = $"  Capacidade da Lista: {tamanhoLista}.  lista inteira: {numeros}. A soma : {somaFinal}. " });
+                    }
+
+                    return BadRequest("Reveja os numeros colocados, Capacidade da lista maior que 0 e numeros da lista menores que 1000");
+
                 }
-                return "Reveja os numeros colodados";
-                
+
+                return BadRequest("Reveja os numeros colocados, Capacidade da lista maior que 0 e numeros da lista menores que 1000");
+
             }
             catch (Exception ex)
             {
 
                 throw new Exception(ex.Message);
-            } 
-
+            }
 
         }
-
 
         #region Helpers
         protected bool CheckNumberValue(int a, int b)
         {
-            return a >= 1 && b <= 1000 ? true : false;           
+            return a >= 1 && b <= 1000 ? true : false;
         }
 
         protected bool CheckValueMaiorQueZero(int a)
         {
             return a >= 0 ? true : false;
+        }
+
+        protected bool CheckValueMenorQueMil(List<int> b)
+        {
+            bool re = b.All(numero => numero <= 1000);
+            return re;
         }
 
         #endregion
