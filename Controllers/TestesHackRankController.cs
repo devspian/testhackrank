@@ -28,7 +28,7 @@ namespace testHackRank.Controllers
         [HttpGet(Name = "Simple Array Sum")]
         public string SimpleArraySum()
         {
-            return "";
+            return "test";
         }
 
 
